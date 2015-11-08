@@ -10,6 +10,8 @@ class Flyout
 
     #then remove template from dom
     removeTemplateCb = => @_manager._removeFlyout @_flyoutDoc
+
+    #todo: make this delay configurable (in case of custom animation)
     Meteor.setTimeout removeTemplateCb, 1000
 
   updateData: (newDataContext) ->
