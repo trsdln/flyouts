@@ -35,8 +35,12 @@ class _FlyoutManager
   _removeFlyout: (flyoutToRemove) ->
     @_flyoutTemplates.remove {_id: flyoutToRemove._id}
 
-  open: (templateName, data) ->
-    flyoutDoc = {name: templateName, data: data}
+  open: (templateName, data, isFlowComponent) ->
+    flyoutDoc =
+      name: templateName
+      data: data
+      isFlowComponent: isFlowComponent
+
     flyoutDoc._id = @_flyoutTemplates.insert flyoutDoc
 
     return new Flyout(flyoutDoc, @)
@@ -50,3 +54,4 @@ flyoutManager = new _FlyoutManager()
 Template.FlyoutManager.helpers
   templates: -> flyoutManager._flyoutTemplates.find({})
   hasOpenedFlyouts: -> flyoutManager._flyoutTemplates.find({}).count() > 0
+
