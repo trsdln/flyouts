@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:flyouts',
-  version: '0.1.1',
+  version: '0.2.0',
   // Brief, one-line summary of the package.
   summary: 'Easy customizable and reactive sidebar flyouts',
   // URL to the Git repository containing the source code for this package.
@@ -18,7 +18,8 @@ Package.onUse(function (api) {
     'blaze',
     'jquery',
     'coffeescript',
-    'less'
+    'less',
+    'meteorhacks:flow-components'
   ], 'client');
 
 
