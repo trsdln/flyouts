@@ -10,4 +10,5 @@ Template.Flyout.helpers
 
 Template.Flyout.events
   'click .close-flyout-button': (event) ->
-    FlyoutManager.close event.target
+    flyout = FlyoutManager.getInstanceByElement event.target
+    flyout.close()

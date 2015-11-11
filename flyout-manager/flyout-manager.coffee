@@ -45,14 +45,13 @@ class _FlyoutManager
 
     return new Flyout(flyoutDoc, @)
 
-  close: (domElement) ->
+  getInstanceByElement: (domElement) ->
     #find out flyout id we are in
     currentFlyoutElement = $(domElement).closest('.flyout')
     flyoutData = Blaze.getData(currentFlyoutElement[0])
 
     #get instance and close
-    flyout = @_getInstanceById flyoutData._id
-    flyout.close()
+    @_getInstanceById flyoutData._id
 
 
 flyoutManager = new _FlyoutManager()
