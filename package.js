@@ -19,7 +19,7 @@ Package.onUse(function (api) {
     'jquery',
     'coffeescript',
     'less',
-    'meteorhacks:flow-components'
+    'meteorhacks:flow-components@0.0.41'
   ], 'client');
 
 
