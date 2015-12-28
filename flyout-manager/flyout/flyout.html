@@ -1,9 +1,5 @@
 <template name="Flyout">
   <div class="flyout {{#if isHidden}}hide-flyout{{else}}show-flyout{{/if}}">
-    {{#if isFlowComponent}}
-      {{> render componentConfig}}
-    {{else}}
-      {{> Template.dynamic template=name data=data}}
-    {{/if}}
+    {{> Template.dynamic template=name data=data}}
   </div>
 </template>

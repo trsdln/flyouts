@@ -35,11 +35,10 @@ class _FlyoutManager
   _removeFlyout: (flyoutToRemove) ->
     @_flyoutTemplates.remove {_id: flyoutToRemove._id}
 
-  open: (templateName, data, isFlowComponent) ->
+  open: (templateName, data) ->
     flyoutDoc =
       name: templateName
       data: data
-      isFlowComponent: isFlowComponent
 
     flyoutDoc._id = @_flyoutTemplates.insert flyoutDoc
 
