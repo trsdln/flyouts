@@ -18,6 +18,7 @@ Package.onUse(function (api) {
     'blaze',
     'jquery',
     'coffeescript',
+    'underscore',
     'less'
   ], 'client');
 
