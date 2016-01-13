@@ -54,6 +54,7 @@ class _FlyoutManager
 
 
 flyoutManager = new _FlyoutManager()
+flyoutManager.open = _.throttle(flyoutManager.open, 1000, {trailing: false})
 
 @FlyoutManager = flyoutManager
 
