@@ -3,7 +3,7 @@ class Flyout
 
   _notifyAboutFlyoutChange: -> @_manager._updateFlyout @_flyoutDoc
 
-  close: () ->
+  close: ->
     #trigger hide animation first
     @_flyoutDoc.visible = false
     @_notifyAboutFlyoutChange()
