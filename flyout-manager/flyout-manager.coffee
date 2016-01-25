@@ -63,3 +63,6 @@ Template.FlyoutManager.helpers
   templates: -> flyoutManager._flyoutTemplates.find({})
   hasOpenedFlyouts: -> flyoutManager._flyoutTemplates.find({}).count() > 0
 
+Template.FlyoutManager.events
+  'click .flyout-backdrop': (event, tmpl) ->
+    tmpl.$('.close-flyout-button').last().click()
