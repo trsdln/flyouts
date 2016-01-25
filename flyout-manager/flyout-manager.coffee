@@ -41,6 +41,17 @@ class _FlyoutManager
       @_flyoutTemplates.remove({})
     , 500
 
+  closeLastFlyout: ->
+    lastFlyoutDoc = @_flyoutTemplates.findOne({}, {
+      skip: @_flyoutTemplates.find({}).count() - 1
+    })
+    @_flyoutTemplates.update({_id: lastFlyoutDoc._id}, {
+      $set: {visible: false}
+    }, {multi: true})
+    Meteor.setTimeout =>
+      @_flyoutTemplates.remove({_id: lastFlyoutDoc._id})
+    , 500
+
   open: (templateName, data) ->
     flyoutDoc =
       name: templateName
@@ -70,5 +81,5 @@ Template.FlyoutManager.helpers
   hasOpenedFlyouts: -> flyoutManager._flyoutTemplates.find({}).count() > 0
 
 Template.FlyoutManager.events
-  'click .flyout-backdrop': (event, tmpl) ->
-    tmpl.$('.close-flyout-button').last().click()
+  'click .flyout-backdrop': ->
+    FlyoutManager.closeLastFlyout()
