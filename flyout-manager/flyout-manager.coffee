@@ -4,7 +4,7 @@ class Flyout
   _notifyAboutFlyoutChange: -> @_manager._updateFlyout @_flyoutDoc
 
   close: () ->
-#trigger hide animation first
+    #trigger hide animation first
     @_flyoutDoc.visible = false
     @_notifyAboutFlyoutChange()
 
@@ -12,7 +12,7 @@ class Flyout
     removeTemplateCb = => @_manager._removeFlyout @_flyoutDoc
 
     #todo: make this delay configurable (in case of custom animation)
-    Meteor.setTimeout removeTemplateCb, 1000
+    Meteor.setTimeout removeTemplateCb, 500
 
   updateData: (newDataContext) ->
     @_flyoutDoc.data = newDataContext
