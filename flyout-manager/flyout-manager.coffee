@@ -35,6 +35,12 @@ class _FlyoutManager
   _removeFlyout: (flyoutToRemove) ->
     @_flyoutTemplates.remove {_id: flyoutToRemove._id}
 
+  removeAllFlyoutes: ->
+    @_flyoutTemplates.update({}, {$set: {visible: false}}, {multi: true})
+    Meteor.setTimeout =>
+      @_flyoutTemplates.remove({})
+    , 500
+
   open: (templateName, data) ->
     flyoutDoc =
       name: templateName
