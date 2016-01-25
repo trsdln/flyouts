@@ -4,4 +4,7 @@
       {{> Flyout}}
     {{/each}}
   </div>
+  {{#if hasOpenedFlyouts}}
+    <div class="flyout-backdrop"></div>
+  {{/if}}
 </template>

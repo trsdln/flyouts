@@ -1,39 +1,49 @@
 class Flyout
   constructor: (@_flyoutDoc, @_manager) ->
 
-  _notifyAboutFlyoutChange: -> @_manager._updateFlyout @_flyoutDoc
-
-  close: () ->
-#trigger hide animation first
-    @_flyoutDoc.visible = false
-    @_notifyAboutFlyoutChange()
-
-    #then remove template from dom
-    removeTemplateCb = => @_manager._removeFlyout @_flyoutDoc
-
-    #todo: make this delay configurable (in case of custom animation)
-    Meteor.setTimeout removeTemplateCb, 1000
+  close: ->
+    @_manager._closeById(@_flyoutDoc._id)
 
   updateData: (newDataContext) ->
     @_flyoutDoc.data = newDataContext
-    @_notifyAboutFlyoutChange()
+    @_manager._updateFlyout @_flyoutDoc
 
 
 class _FlyoutManager
   constructor: () ->
     @_flyoutTemplates = new Mongo.Collection(null)
 
+  _getAnimationDuration: ->
+    1000 * parseFloat($('.show-flyout').css('animation-duration'))
+
   _getInstanceById: (id) ->
     doc = @_flyoutTemplates.findOne({_id: id})
     return new Flyout(doc, @)
 
   _updateFlyout: (updatedFlyout) ->
-    updateQuery = _.clone updatedFlyout
-    delete updateQuery._id
-    @_flyoutTemplates.update {_id: updatedFlyout._id}, {$set: updateQuery}
+    @_flyoutTemplates.update {_id: updatedFlyout._id}, {
+      $set: _.omit(updatedFlyout, '_id')
+    }
 
-  _removeFlyout: (flyoutToRemove) ->
-    @_flyoutTemplates.remove {_id: flyoutToRemove._id}
+  _closeById: (id) ->
+    updateQuery = if id then {_id: id} else {}
+
+    @_flyoutTemplates.update(updateQuery, {
+      $set: {visible: false}
+    }, {multi: true})
+
+    Meteor.setTimeout =>
+      @_flyoutTemplates.remove(updateQuery)
+    , @_getAnimationDuration()
+
+  closeAll: ->
+    @_closeById()
+
+  closeLast: ->
+    lastFlyoutDoc = @_flyoutTemplates.findOne({}, {
+      skip: @_flyoutTemplates.find({}).count() - 1
+    })
+    @_closeById(lastFlyoutDoc._id)
 
   open: (templateName, data) ->
     flyoutDoc =
@@ -63,3 +73,6 @@ Template.FlyoutManager.helpers
   templates: -> flyoutManager._flyoutTemplates.find({})
   hasOpenedFlyouts: -> flyoutManager._flyoutTemplates.find({}).count() > 0
 
+Template.FlyoutManager.events
+  'click .flyout-backdrop': ->
+    FlyoutManager.closeLast()

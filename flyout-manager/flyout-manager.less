@@ -1,4 +1,5 @@
 @width: 500px;
+@animationDuration: .5s;
 
 //mix ins
 
@@ -27,11 +28,11 @@
 //animation mix-in
 .flyout-animation(@animation) {
   animation-name: @animation;
-  animation-duration: 1s;
+  animation-duration: @animationDuration;
   -webkit-animation-name: @animation;
-  -webkit-animation-duration: 1s;
+  -webkit-animation-duration: @animationDuration;
   -moz-animation-name: @animation;
-  -moz-animation-duration: 1s;
+  -moz-animation-duration: @animationDuration;
 
 }
 
@@ -74,3 +75,9 @@
   }
 }
 
+.flyout-backdrop {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1049;
+}
