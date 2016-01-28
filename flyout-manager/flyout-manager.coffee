@@ -8,6 +8,9 @@ class Flyout
     @_flyoutDoc.data = newDataContext
     @_manager._updateFlyout @_flyoutDoc
 
+  isTopBack: () ->
+    @_manager._getFirstFlyout()._id is @_flyoutDoc._id
+
 
 class _FlyoutManager
   constructor: () ->
@@ -36,14 +39,15 @@ class _FlyoutManager
       @_flyoutTemplates.remove(updateQuery)
     , @_getAnimationDuration()
 
-  closeAll: ->
-    @_closeById()
+  _getFirstFlyout: () -> @_flyoutTemplates.findOne {}
 
-  closeLast: ->
-    lastFlyoutDoc = @_flyoutTemplates.findOne({}, {
-      skip: @_flyoutTemplates.find({}).count() - 1
-    })
-    @_closeById(lastFlyoutDoc._id)
+  _getLastFlyout: () ->
+    totalFlyoutCount = @_flyoutTemplates.find({}).count()
+    @_flyoutTemplates.findOne {}, {skip: totalFlyoutCount - 1}
+
+  closeAll: -> @_closeById()
+
+  closeLast: -> @_closeById(@_getLastFlyout()._id)
 
   open: (templateName, data) ->
     flyoutDoc =
@@ -55,7 +59,7 @@ class _FlyoutManager
     return new Flyout(flyoutDoc, @)
 
   getInstanceByElement: (domElement) ->
-    #find out flyout id we are in
+#find out flyout id we are in
     currentFlyoutElement = $(domElement).closest('.flyout')
     flyoutData = Blaze.getData(currentFlyoutElement[0])
 
