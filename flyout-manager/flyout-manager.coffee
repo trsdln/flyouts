@@ -47,7 +47,9 @@ class _FlyoutManager
 
   closeAll: -> @_closeById()
 
-  closeLast: -> @_closeById(@_getLastFlyout()._id)
+  closeLast: ->
+    lastFlyout = @_getLastFlyout()
+    @_closeById(lastFlyout._id) if lastFlyout
 
   open: (templateName, data) ->
     flyoutDoc =
