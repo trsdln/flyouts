@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:flyouts',
-  version: '1.1.2',
+  version: '1.1.3',
   // Brief, one-line summary of the package.
   summary: 'Easy customizable and reactive sidebar flyouts',
   // URL to the Git repository containing the source code for this package.
@@ -17,7 +17,6 @@ Package.onUse(function (api) {
     'templating',
     'blaze',
     'jquery',
-    'coffeescript',
     'underscore',
     'less'
   ], 'client');
@@ -25,9 +24,9 @@ Package.onUse(function (api) {
 
   api.addFiles([
     'flyout-manager/flyout-manager.html',
-    'flyout-manager/flyout-manager.coffee',
+    'flyout-manager/flyout-manager.js',
     'flyout-manager/flyout/flyout.html',
-    'flyout-manager/flyout/flyout.coffee',
+    'flyout-manager/flyout/flyout.js',
     'flyout-manager/flyout-manager.less'
   ], 'client');
 
