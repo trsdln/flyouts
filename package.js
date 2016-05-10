@@ -30,5 +30,5 @@ Package.onUse(function (api) {
     'flyout-manager/flyout-manager.less'
   ], 'client');
 
-  //api.export('FlyoutManager', 'client');
+  api.export(['FlyoutManager'], 'client');
 });

@@ -18,27 +18,30 @@ class Flyout {
   }
 }
 
-class _FlyoutManager {
+class FlyoutManagerImpl {
   constructor() {
     this._flyoutTemplates = new Mongo.Collection(null);
-    this._lastTimeOpened = null;
+
+    let bindOpenFn = this._open.bind(this);
+    this._throttledOpenFn = _.throttle(bindOpenFn, 1000, {trailing: false});
   }
 
   _getAnimationDuration() {
     return 1000 * parseFloat($('.show-flyout').css('animation-duration'));
   }
+
   _getInstanceById(id) {
-    let doc = this._flyoutTemplates.findOne({ _id: id });
+    let doc = this._flyoutTemplates.findOne({_id: id});
     return new Flyout(doc, this);
   }
 
   _updateFlyout(updatedFlyout) {
-    return this._flyoutTemplates.update({ _id: updatedFlyout._id }, { $set: _.omit(updatedFlyout, '_id') });
+    return this._flyoutTemplates.update({_id: updatedFlyout._id}, {$set: _.omit(updatedFlyout, '_id')});
   }
 
   _closeById(id) {
-    let updateQuery = id ? { _id: id } : {};
-    this._flyoutTemplates.update(updateQuery, { $set: { visible: false } }, { multi: true });
+    let updateQuery = id ? {_id: id} : {};
+    this._flyoutTemplates.update(updateQuery, {$set: {visible: false}}, {multi: true});
 
     return Meteor.setTimeout(() => {
       this._flyoutTemplates.remove(updateQuery);
@@ -66,46 +69,40 @@ class _FlyoutManager {
       return this._closeById(lastFlyout._id);
     }
   }
-  _isCanOpenAgain(isImmediately){
-    if(isImmediately) { return true;}
-    if(!this._lastTimeOpened) {
-      this._lastTimeOpened = new Date();
-      return true;
-    }
-    if(new Date().getTime() - this._lastTimeOpened.getTime()  > 500 ){
-      return true;
-    }
-    return false;
+
+  _open(templateName, data) {
+    let flyoutDoc = {
+      name: templateName,
+      data: data
+    };
+    flyoutDoc._id = this._flyoutTemplates.insert(flyoutDoc);
+    return new Flyout(flyoutDoc, this);
   }
-  open(templateName, data, openAs) {
-    if(this._isCanOpenAgain(openAs === 'immediately')) {
-      let flyoutDoc = {
-        name: templateName,
-        data: data
-      };
-      flyoutDoc._id = this._flyoutTemplates.insert(flyoutDoc);
-      this._lastTimeOpened = new Date();
-      return new Flyout(flyoutDoc, this);
+
+  open(templateName, data, ignoreThrottle = false) {
+    if (ignoreThrottle) {
+      this._open(templateName, data);
+    } else {
+      this._throttledOpenFn(templateName, data);
     }
   }
 
   getInstanceByElement(domElement) {
-    let  currentFlyoutElement = $(domElement).closest('.flyout');
+    let currentFlyoutElement = $(domElement).closest('.flyout');
     let flyoutData = Blaze.getData(currentFlyoutElement[0]);
     return this._getInstanceById(flyoutData._id);
   }
 }
 
-let flyoutManager = new _FlyoutManager();
-this.FlyoutManager = flyoutManager;
+FlyoutManager = new FlyoutManagerImpl();
 
 
 Template.FlyoutManager.helpers({
   templates() {
-    return flyoutManager._flyoutTemplates.find({});
+    return FlyoutManager._flyoutTemplates.find({});
   },
   hasOpenedFlyouts() {
-    return flyoutManager._flyoutTemplates.find({}).count() > 0;
+    return FlyoutManager._flyoutTemplates.find({}).count() > 0;
   }
 });
 
