@@ -21,12 +21,12 @@ class Flyout {
 class _FlyoutManager {
   constructor() {
     this._flyoutTemplates = new Mongo.Collection(null);
+    this._lastTimeOpened = null;
   }
 
   _getAnimationDuration() {
     return 1000 * parseFloat($('.show-flyout').css('animation-duration'));
   }
-
   _getInstanceById(id) {
     let doc = this._flyoutTemplates.findOne({ _id: id });
     return new Flyout(doc, this);
@@ -66,14 +66,27 @@ class _FlyoutManager {
       return this._closeById(lastFlyout._id);
     }
   }
-
-  open(templateName, data) {
-   let flyoutDoc = {
-      name: templateName,
-      data: data
-    };
-    flyoutDoc._id = this._flyoutTemplates.insert(flyoutDoc);
-    return new Flyout(flyoutDoc, this);
+  _isCanOpenAgain(isImmediately){
+    if(isImmediately) { return true;}
+    if(!this._lastTimeOpened) {
+      this._lastTimeOpened = new Date();
+      return true;
+    }
+    if(new Date().getTime() - this._lastTimeOpened.getTime()  > 500 ){
+      return true;
+    }
+    return false;
+  }
+  open(templateName, data, openAs) {
+    if(this._isCanOpenAgain(openAs === 'immediately')) {
+      let flyoutDoc = {
+        name: templateName,
+        data: data
+      };
+      flyoutDoc._id = this._flyoutTemplates.insert(flyoutDoc);
+      this._lastTimeOpened = new Date();
+      return new Flyout(flyoutDoc, this);
+    }
   }
 
   getInstanceByElement(domElement) {
@@ -84,11 +97,8 @@ class _FlyoutManager {
 }
 
 let flyoutManager = new _FlyoutManager();
-flyoutManager.open = _.throttle(flyoutManager.open, 1000, {
-  trailing: false
-});
-
 this.FlyoutManager = flyoutManager;
+
 
 Template.FlyoutManager.helpers({
   templates() {
