@@ -71,6 +71,10 @@ class FlyoutManagerImpl {
   }
 
   _open(templateName, data) {
+    if (!Template.hasOwnProperty(templateName)) {
+      throw new Error(`Template "${templateName}" is not defined!`);
+    }
+
     let flyoutDoc = {
       name: templateName,
       data: data
