@@ -18,6 +18,7 @@ Package.onUse(function (api) {
     'blaze',
     'jquery',
     'underscore',
+    'ecmascript',
     'less'
   ], 'client');
 
