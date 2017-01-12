@@ -23,7 +23,7 @@ class FlyoutManagerImpl {
     this._flyoutTemplates = new Mongo.Collection(null);
 
     let bindOpenFn = this._open.bind(this);
-    this._throttledOpenFn = _.throttle(bindOpenFn, 1000, {trailing: false});
+    this._throttledOpenFn = _.throttle(bindOpenFn, 1000, { trailing: false });
   }
 
   _getAnimationDuration() {
@@ -31,17 +31,17 @@ class FlyoutManagerImpl {
   }
 
   _getInstanceById(id) {
-    let doc = this._flyoutTemplates.findOne({_id: id});
+    let doc = this._flyoutTemplates.findOne({ _id: id });
     return new Flyout(doc, this);
   }
 
   _updateFlyout(updatedFlyout) {
-    return this._flyoutTemplates.update({_id: updatedFlyout._id}, {$set: _.omit(updatedFlyout, '_id')});
+    return this._flyoutTemplates.update({ _id: updatedFlyout._id }, { $set: _.omit(updatedFlyout, '_id') });
   }
 
   _closeById(id) {
-    let updateQuery = id ? {_id: id} : {};
-    this._flyoutTemplates.update(updateQuery, {$set: {visible: false}}, {multi: true});
+    let updateQuery = id ? { _id: id } : {};
+    this._flyoutTemplates.update(updateQuery, { $set: { visible: false } }, { multi: true });
 
     return Meteor.setTimeout(() => {
       this._flyoutTemplates.remove(updateQuery);
@@ -85,9 +85,9 @@ class FlyoutManagerImpl {
 
   open(templateName, data, ignoreThrottle = false) {
     if (ignoreThrottle) {
-      this._open(templateName, data);
+      return this._open(templateName, data);
     } else {
-      this._throttledOpenFn(templateName, data);
+      return this._throttledOpenFn(templateName, data);
     }
   }
 

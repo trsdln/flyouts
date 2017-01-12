@@ -1,6 +1,6 @@
 Package.describe({
   name: 'trsdln:flyouts',
-  version: '1.1.3',
+  version: '1.1.4',
   // Brief, one-line summary of the package.
   summary: 'Easy customizable and reactive sidebar flyouts',
   // URL to the Git repository containing the source code for this package.
