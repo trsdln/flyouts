@@ -9,7 +9,6 @@ caching-compiler@1.0.0
 caching-html-compiler@1.0.2
 callback-hook@1.0.4
 check@1.1.0
-coffeescript@1.0.11
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.2
@@ -44,7 +43,7 @@ spacebars-compiler@1.0.7
 templating@1.1.5
 templating-tools@1.0.0
 tracker@1.0.9
-trsdln:flyouts@1.0.2
+trsdln:flyouts@1.1.4
 ui@1.0.8
 underscore@1.0.4
 webapp@1.2.3
